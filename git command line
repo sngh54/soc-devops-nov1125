@@ -1,0 +1,6 @@
+#lets configure the global variables in git 
+  500  git config --global user.name "gopal"
+  501  git config --global user.email "gopal@nextcloud.com"
+  502  git config --global --list
+  503  git config --global --get user.name
+#######################
