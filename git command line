@@ -41,3 +41,29 @@ drwxr-xr-x 1 gopal 197121  0 Nov 10 12:56 .git/
   529  git status
   530  git log
 ####one commit will be created 
+#lets try to understadn the git diff command
+ 546  echo "added multiple function in calcy program" >> calc.py
+  547  git diff
+  548  git status
+  549  git add calc.py
+  550  git commit -m "added multiple function"
+  551  git log
+###lets understand the git reset 
+#by mistake we move all the file to the staging area 
+ 555  git add .
+  556  git status
+#git reset will move the file back to working directory
+  557  git reset
+  558  git status
+####lets leran about .gitignore put all the files name inside .gitignore
+ 561  touch .gitignore
+#ls will not show the .gitignore file as it is hidden any file in linux and windows you create with . at the starting will be automatically hidden
+  562  ls
+  563  ls -la
+
+ 568  echo "DS_Store" > .gitignore
+  569  echo "secret" >> .gitignore
+  570  echo "auth" >> .gitignore
+  571  cat .gitignore
+###file name should match finally if you do git status it will not show those file name which is in the ignore list
+  572  git status
