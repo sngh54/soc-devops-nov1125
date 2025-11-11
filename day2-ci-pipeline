@@ -11,5 +11,16 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
+        stage('test the code') {
+            steps {
+                sh 'mvn test'
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+        stage('check style testing') {
+            steps {
+                sh 'mvn checkstyle:checkstyle'
+            }
+        }
     }
 }
