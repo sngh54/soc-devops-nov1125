@@ -22,5 +22,14 @@ pipeline {
                 sh 'mvn checkstyle:checkstyle'
             }
         }
+        stage('sonar'){
+            steps {
+                sh 'mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=gopal-sonar-integration \
+  -Dsonar.projectName='gopal-sonar-integration' \
+  -Dsonar.host.url=http://20.127.244.252:9000 \
+  -Dsonar.token=sqp_499dbf3540c10003500303db5b26f1d35906866e'
+            }
+        }
     }
 }
