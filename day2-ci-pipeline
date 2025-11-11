@@ -31,5 +31,19 @@ pipeline {
   -Dsonar.token=sqp_499dbf3540c10003500303db5b26f1d35906866e"
             }
         }
+        stage('nexus') {
+            steps {
+                script {
+                    pom = readMavenPom file: "pom.xml";
+
+                filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    artifactPath = filesByGlob[0].path;
+                nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus-cred', groupId: pom.artifactId, nexusUrl: '20.55.77.91:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'gopal-maven-snapshot', version: pom.version
+                }
+            }
+        }
     }
 }
+
+#note on line 42 modify the repo name
