@@ -22,3 +22,9 @@ sudo -i
 ####press ctrl c to close it
 ###docker ps -a will show all the running and stopped container
 docker ps -a
+#the default name of the container is showing an dictionary name if you want to give a custom name to your container 
+ 40  docker container run -p 84:80 -d --name webhost nginx
+   41  docker ps
+#############lets check the logs of your container also 
+45  curl localhost:84
+   46  docker logs webhost
