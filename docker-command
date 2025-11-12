@@ -28,3 +28,24 @@ docker ps -a
 #############lets check the logs of your container also 
 45  curl localhost:84
    46  docker logs webhost
+#container vs process id 
+#lets create the docker container with mongo
+ 55  docker run --name mongo -d mongo
+   56  docker ps
+#the top command will show that mongo db is running with a process id
+   57  docker top mongo
+#ps aux is the linux command used to check all the process id in your linux system
+   58  ps aux
+#check the mongo db process id match with the ps aux command
+   59  docker top mongo
+   60  docker ps
+#change the process id to your mongo db porocess id and kill it 
+   61  kill -9 10258
+#once you kill it the container will be shown in exit status
+   62  docker ps -a
+#if you want to start your container again start
+   63  docker start mongo
+   64  docker ps
+#if you want to stop your container again
+   65  docker stop mongo
+
