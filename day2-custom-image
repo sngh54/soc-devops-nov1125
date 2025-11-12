@@ -1,0 +1,35 @@
+#how to build our custom images
+  #lets clone the spring hello application
+   97  apt install default-jdk
+   98  apt install maven
+   99  git clone https://github.com/gopal1409/spring-hello.git
+  100  cd spring-hello/
+  101  mvn clean package
+  102  ls target/
+  103  java -jar ./target/spring-boot-2-hello-world-1.0.2-SNAPSHOT.jar
+    #open port 8080 in your nsg 
+    #copy the public ip and port 8080 replace the public ip with your instance public ip 
+    http://74.235.122.241:8080/hello
+    #this will show the test page of your application
+    ##lets convert this into an container based image 
+    #in the root directory of your application folder we need to create a file called as dockerfile
+    112  nano dockerfile
+FROM eclipse-temurin:17-jre-ubi10-minimal
+WORKDIR /app
+MAINTAINER john cena<john@gmail.com>
+VOLUME /tmp
+#this expose is related to your application port number
+EXPOSE 8080
+ARG JAR_FILE=target/spring-boot-2-hello-world-1.0.2-SNAPSHOT.jar
+COPY ${JAR_FILE} helloworld.jar
+ENTRYPOINT ["java","-jar","helloworld.jar"]
+#docker build will build the hello app as container
+  113  docker build -t helloapp .
+    #docker images will show that my image is created or not 
+  114  docker images
+    #lets create an container out of that image 
+  115  docker run -d -p 8080:8080 helloapp
+    #docker ps will show the contianer running from the image
+  116  docker ps
+    #lets ir through terminal
+124  curl localhost:8080/hello
