@@ -52,3 +52,7 @@ spec: #this is the specification of the pod
 save the file in pod3.yml
 do kubectl apply -f pod3.yml
 check that you hello app is running or not . 
+#lets delet the pod 
+  63  kubectl delete pod helloapp
+   64  kubectl get pod
+
