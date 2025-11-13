@@ -15,3 +15,5 @@
    22  systemctl status containerd
   ##press q 
 
+26  crictl images
+   27  crictl
