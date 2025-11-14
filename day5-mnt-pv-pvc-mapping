@@ -47,4 +47,34 @@ root@k8smaster:~# kubectl get pv
 NAME        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM              STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
 pv-volume   5Gi        RWO            Retain           Bound    default/pv-claim                  <unset>                          4m41s
 root@k8smaster:~#
+#lets create the secret 
+root@k8smaster:~# nano secret.yml
+apiVersion: v1 
+kind: Secret
+metadata:
+  name: mysql-db-password
+type: Opaque #
+data:
+  password: cGFzc3dvcmQxMDE= #password101 (base64 encoded)
+
+root@k8smaster:~# kubectl apply -f secret.yml
+secret/mysql-db-password created
+root@k8smaster:~# kubectl get secret
+NAME                TYPE     DATA   AGE
+mysql-db-password   Opaque   1      7s
+root@k8smaster:~#
+##let create the config map
+144  nano configmap.yml
+apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: userdb-creation-script
+data:
+  mysql_usermgmt.sql: |
+    DROP DATABASE IF EXISTS webappdb;
+    CREATE DATABASE webappdb;
+  145  kubectl apply -f configmap.yml
+  146  kubectl get configmap
+  147  kubectl describe configmap userdb-creation-script
+
 
