@@ -26,3 +26,34 @@
 #if you want to check which version of the image it is running. 
   107  kubectl rollout history deployment my-first-deployment --revision=1
   108  kubectl rollout history deployment my-first-deployment --revision=2
+#lets expose the deployment 
+97  kubectl expose deployment -h
+   98  kubectl get deploy
+   99  kubectl expose deploy my-first-deployment --type=NodePort --port=80 --name=my-first-service
+#once you expose the deployment check in which nodeport it is running the series of the node port will be from 30000-32767
+  100  kubectl get svc
+root@k8smaster:~# kubectl get svc
+NAME               TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes         ClusterIP   10.96.0.1      <none>        443/TCP        22h
+my-first-service   NodePort    10.110.20.94   <none>        80:30248/TCP   2m8s
+##once you got the port number copy the node machine ip address and paste in the browser with port number that is 30 thousand series
+#we need to also verify the service is mapped to your pod or not 
+#lets check the ip of both the pod 
+root@k8smaster:~# kubectl get pod -o wide
+NAME                                   READY   STATUS    RESTARTS      AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+my-first-deployment-747584fd54-dpblg   1/1     Running   0             41m   192.168.192.6   k8snode   <none>           <none>
+my-first-deployment-747584fd54-mphc2   1/1     Running   0             41m   192.168.192.5   k8snode   <none>           <none>
+############lets look into the service
+#if you look into the service endpoint there are two pod with the same ip attach
+  120  kubectl get svc
+  121  kubectl describe svc my-first-service
+#lets update the image with a new image 
+kubectl set image deploy my-first-deployment nginx=nulldevil/phpsysinfo
+#check the rollout history
+ 124  kubectl set image deploy my-first-deployment nginx=nulldevil/phpsysinfo
+  125  kubectl rollout history deployment my-first-deployment
+#if you check the third resion it is showing phpsysinfo image
+  126  kubectl rollout history deployment my-first-deployment --revision=3
+#lets refresh the page multiple times the traffic will move from one pod to another pod 
+
+
