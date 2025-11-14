@@ -1,0 +1,35 @@
+#namespace
+   168  kubectl create namespace dev
+  169  kubectl describe ns dev
+#lets create quota in ns
+  root@k8smaster:~# nano quota.yml
+apiVersion: v1 
+kind: ResourceQuota
+metadata:
+  name: dev-quota
+  namespace: dev
+spec:
+  hard:
+    requests.cpu: "2" #inside the particular namespace no container should exceed 2 cpu
+    requests.memory: 4Gi
+    limits.cpu: "4" #in the dev namespace we have max they can use 4 core processor all the pod should not exceed more than 4 core
+    limits.memory: 8Gi
+#for every pod in the namespace it will reserve 2 cpu and 4Gi memory
+#for every pod in the namespace it will limit to 4 cpu and 8Gi memory
+    pods: "10"
+    persistentvolumeclaims: "5"
+    requests.storage: 20Gi
+root@k8smaster:~# kubectl apply -f quota.yml
+resourcequota/dev-quota created
+root@k8smaster:~# kubectl -n dev describe quota
+Name:                   dev-quota
+Namespace:              dev
+Resource                Used  Hard
+--------                ----  ----
+limits.cpu              0     4
+limits.memory           0     8Gi
+persistentvolumeclaims  0     5
+pods                    0     10
+requests.cpu            0     2
+requests.memory         0     4Gi
+requests.storage        0     20Gi
