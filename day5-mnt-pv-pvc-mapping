@@ -76,5 +76,77 @@ data:
   145  kubectl apply -f configmap.yml
   146  kubectl get configmap
   147  kubectl describe configmap userdb-creation-script
+#lets create the mysql deployment 
+149  nano mysql.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql 
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql 
+    spec:
+      containers:
+      - name: myapp
+        image: mysql:5.6
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-db-password 
+                key: password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - name: storage
+            mountPath: /var/lib/mysql
+          - name: usermgmt-db-script
+            mountPath: /docker-entrypoint-initdb.d/
+      volumes: 
+        - name: storage
+          persistentVolumeClaim:
+            claimName: pv-claim
+        - name: usermgmt-db-script
+          configMap:
+            name: userdb-creation-script
+  150  kubectl apply -f mysql.yml
+#once you applied it lets verify the describe command 
+154  kubectl describe deploy mysql
+###check the describe command it will show three parameters
+1. environment 
+2. configmap
+3. PVC
+####################if all good well we can login inside the mysql database using the password 
+root@k8smaster:~# kubectl get pod
+NAME                                   READY   STATUS    RESTARTS        AGE
+
+mysql-9d68c55bb-frbkx                  1/1     Running   0               4m10s
+nginx                                  1/1     Running   1 (5h26m ago)   24h
+root@k8smaster:~# kubectl exec -it mysql-9d68c55bb-frbkx -- /bin/bash
+root@mysql-9d68c55bb-frbkx:/#
+#change the pod id to your id while loggin
+#lets use the login of mysql password is password101
+root@mysql-9d68c55bb-frbkx:/# mysql -u root -p
+###once you login check the database is created or not 
+show databases;
+#you can see your webappdb
+mysql> create database employee;
+#lets visualize the db 
+show databases;
+exit
+#now this database need to be created in /mnt/data as a folder login to the node machine and verify it
+root@k8snode:~# cd /mnt/data
+root@k8snode:/mnt/data# ls
+auto.cnf  employee  ib_logfile0  ib_logfile1  ibdata1  mysql  performance_schema  webappdb
+root@k8snode:/mnt/data#
+
+
+
+
 
 
