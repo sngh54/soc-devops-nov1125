@@ -15,3 +15,14 @@
 #if you delete the deploy it will delete all the pod down the line
    83  kubectl delete deploy my-first-deployment
    84  kubectl get pod
+#lets update the deployment to a new version
+ 103  kubectl set image deploy my-first-deployment nginx=nginx:1.16.1
+#using rollout you will know how the deployment is changing
+  104  kubectl rollout status deployment my-first-deployment
+#if you look into the replicaset there are two rs previos one will be zero 
+  105  kubectl get rs
+#if you want to see the rollout history 
+  106  kubectl rollout history deployment my-first-deployment
+#if you want to check which version of the image it is running. 
+  107  kubectl rollout history deployment my-first-deployment --revision=1
+  108  kubectl rollout history deployment my-first-deployment --revision=2
